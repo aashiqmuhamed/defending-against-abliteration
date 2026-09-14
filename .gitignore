@@ -1,0 +1,31 @@
+.env
+__pycache__/
+*.pyc
+*.bak
+
+# Build and tool caches
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+
+# Run outputs
+results/
+runs/
+logs/
+*.log
+
+# Defended checkpoints and Heretic's abliterated ones are large and, in the
+# Heretic case, de-aligned. Neither belongs in git.
+defended/
+_heretic_abliterated/
+heretic_venv/
+
+# Fetched prompt sets are cached outside the repo by default; ignore any local copy.
+.cache/
+
+# IDE / tools
+.claude/
+.vscode/
+.idea/
+.DS_Store

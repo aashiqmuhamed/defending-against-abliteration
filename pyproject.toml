@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ddo-defense"
+version = "0.1.0"
+description = "Decoy Direction Optimization: a weight-only defense against refusal feature ablation"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+keywords = ["llm", "safety", "alignment", "abliteration", "refusal"]
+
+classifiers = [
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3.10",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+# torch is deliberately absent: the right build depends on the CUDA version
+# installed on the machine, so installing it here would pick wrong as often as
+# right. Install torch first, then this package. These pins assume
+# torch 2.3.0+cu121 with vllm 0.5.0.
+dependencies = [
+  "transformers==4.51.0",
+  "tokenizers>=0.21,<0.22",
+  "accelerate==0.33.0",
+  "nnsight==0.3.7",
+  "optuna==4.9.0",
+  "tqdm>=4.66",
+]
+
+[project.optional-dependencies]
+# Heavier evaluation stack: benchmark harnesses, hosted judges, vLLM.
+eval = [
+  "lighteval[accelerate]==0.6.2",
+  "fschat>=0.2.36",
+  "datasets>=2.19",
+  "openai>=1.30",
+  "vllm==0.5.0",
+  "strong-reject>=0.1",
+]
+dev = [
+  "pytest>=8.0",
+]
+
+[project.scripts]
+ddo-apply = "ddo_defense.cli:apply_main"
+ddo-tune = "ddo_defense.cli:tune_main"
+ddo-fingerprint = "ddo_defense.cli:fingerprint_main"
+ddo-eval = "ddo_eval.cli:main"
+
+[tool.setuptools.packages.find]
+# Flat layout: both packages sit at the repo root so the library also runs
+# straight from a clone with no install at all.
+include = ["ddo_defense*", "ddo_eval*"]
+exclude = ["tests*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
